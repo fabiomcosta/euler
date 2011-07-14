@@ -1,19 +1,8 @@
 #include <stdio.h>
 #include <math.h>
-#include "../assert.h"
+#include "../lib/assert.h"
 
-inline long is_prime(long number){
-    long sqrt_number = sqrt(number);
-    long i;
-
-    for (i = 2; i <= sqrt_number; i++){
-        if (number % i == 0){
-            return 0;
-        }
-    }
-
-    return 1;
-}
+#include "../lib/fmath.h"
 
 long max_prime_factor_from(long number){
     long sqrt_number = sqrt(number);
