@@ -10,4 +10,4 @@ run:
 clean:
 	@rm -f main
 	@rm -f *.o
-	@echo "cleaned problem{{p}}."
+	@echo "cleaned problem10."
