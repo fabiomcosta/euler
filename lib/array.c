@@ -7,39 +7,38 @@
 
 
 array*
-array_new(array* arr, int block_size) {
+array_new(array* arr) {
 
     if (!arr){
         arr = malloc(sizeof(*arr));
 
         if (!arr){
             ERROR("ERROR: Couldn't allocate memory.\n");
-            return NULL;
+            exit(1);
         }
 
         arr->length = 0;
         arr->_n_allocated = 0;
-        arr->_block_size = block_size;
     }
 
     if (arr->length == arr->_n_allocated) {
         int alloc;
 
         if (arr->_n_allocated == 0) {
-            alloc = 4;
+            alloc = ARRAY_INITIAL_LENGTH;
         } else {
-            alloc = arr->_n_allocated * 2;
+            alloc = arr->_n_allocated * ARRAY_GROWTH_RATE;
         }
 
-        void *tmp_buffer = realloc(arr->itens, (alloc * arr->_block_size));
+        void *tmp_buffer = realloc(arr->itens, (alloc * sizeof(*arr->itens)));
 
         if (!tmp_buffer) {
             free(tmp_buffer);
             ERROR("ERROR: Couldn't realloc memory.\n");
-            return NULL;
+            exit(1);
         }
 
-        arr->itens = tmp_buffer;
+        arr->itens = (array_item *)tmp_buffer;
         arr->_n_allocated = alloc;
     }
 
@@ -48,24 +47,23 @@ array_new(array* arr, int block_size) {
 
 
 array*
-array_alloc(array* arr) {
-    if (!arr) {
-        return array_new(arr, 4);
-    }
-    return array_new(arr, arr->_block_size);
-}
-
-
-array*
-array_push(array *arr, void *item) {
-    arr = array_alloc(arr);
-    arr->itens[arr->length++] = item;
+array_push(array *arr, void *item, char const should_free) {
+    arr = array_new(arr);
+    arr->itens[arr->length].item = item;
+    arr->itens[arr->length].should_free = should_free;
+    arr->length++;
     return arr;
 }
 
 
 void
 array_free(array *arr) {
+    int i;
+    for (i = 0; i < arr->length; i++) {
+        if (arr->itens[i].should_free){
+            free(arr->itens[i].item);
+        }
+    }
     free(arr->itens);
     free(arr);
 }
@@ -76,7 +74,7 @@ array_copy_value(void *value, int len) {
    void *ret = malloc(len);
    if (!ret) {
       ERROR("ERROR: value duplication failed.\n");
-      return NULL;
+      exit(1);
    }
    memcpy(ret, value, len);
    return ret;
@@ -84,62 +82,38 @@ array_copy_value(void *value, int len) {
 
 
 int main(){
-    array *a = NULL;
-    a = array_new(a, sizeof(int));
+    ARRAY_NEW(a);
 
     assert_equals_int(a->length, 0);
-    assert_equals_int(a->_block_size, 4);
     assert_equals_int(a->_n_allocated, 4);
 
-    int b = 10;
-    a = ARRAY_PUSH(a, b);
+    int i = 10;
+    ARRAY_PUSH(a, i);
 
     assert_equals_int(a->length, 1);
-    assert_equals_int(a->_block_size, 4);
     assert_equals_int(a->_n_allocated, 4);
 
     assert_equals_int(ARRAY_GET(a, 0, int), 10);
 
-    array *aa = NULL;
-    aa = array_new(aa, sizeof(char));
+    char b = 'c';
+    char b2 = 'c';
+    char b3 = 'c';
 
-    char bb = 'c';
+    ARRAY_PUSH(a, b);
+    ARRAY_PUSH(a, b2);
+    ARRAY_PUSH(a, b3);
 
-    aa = array_push(aa, &bb);
+    assert(ARRAY_GET(a, 1, char) == 'c');
+    assert(ARRAY_GET(a, 2, char) == 'c');
+    assert(ARRAY_GET(a, 3, char) == 'c');
 
-    assert(ARRAY_GET(aa, 0, char) == 'c');
+    char c[] = "a long phrase with some chars\n";
 
-    /*a = ARRAY_PUSH(a, 20);*/
-
-    /*int n = 10;*/
-
-    /*array_push(a, &n);*/
-
-    /*array_push(&a, &11);*/
-    /*array_push(&a, &12);*/
-
-    /*assert_equals_int(a.length, 1);*/
-
-    /*assert(strcmp(a.itens[0].key, "something") == 0);*/
-    /*assert(strcmp(a.itens[1].key, "other") == 0);*/
-    /*assert(strcmp(a.itens[2].key, "oops") == 0);*/
-
-    /*assert(array_contains(&a, "something"));*/
-    /*assert(!array_contains(&a, "err"));*/
-
-    /*assert_equals_int(array_get(&a,"something"), 10);*/
-    /*assert_equals_int(array_get(&a, "other"), 11);*/
-    /*assert_equals_int(array_get(&a, "err"), -1);*/
+    ARRAY_PUSH_PTR(a, c);
+    printf(ARRAY_GET_PTR(a, 4, char*));
+    assert(strcmp(ARRAY_GET_PTR(a, 4, char*), "a long phrase with some chars\n") == 0);
 
     array_free(a);
-    array_free(aa);
-
-    /*int c = 2;*/
-    /*void **d;*/
-    /*PINT(sizeof d);*/
-
-    /*typeof(d) b = 5;*/
-    /*PINT(b);*/
 
     return 0;
 }
