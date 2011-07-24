@@ -47,6 +47,7 @@ array_new(array* arr) {
 
 }
 
+
 void
 array_push(array *arr, void *item, char const is_copy) {
     array_new(arr);
@@ -80,53 +81,53 @@ copy(void *value, int len) {
 }
 
 
-int main(){
-    array a;
-    a.itens = NULL;
-    array_new(&a);
+/*int main(){*/
+    /*array a;*/
+    /*a.itens = NULL;*/
+    /*array_new(&a);*/
 
-    assert_equals_int(a.length, 0);
-    assert_equals_int(a._n_allocated, 4);
+    /*assert_equals_int(a.length, 0);*/
+    /*assert_equals_int(a._n_allocated, 4);*/
 
-    int i = 10;
-    ARRAY_PUSH(&a, i);
+    /*int i = 10;*/
+    /*ARRAY_PUSH(&a, i);*/
 
-    assert_equals_int(a.length, 1);
-    assert_equals_int(a._n_allocated, 4);
+    /*assert_equals_int(a.length, 1);*/
+    /*assert_equals_int(a._n_allocated, 4);*/
 
-    assert_equals_int(ARRAY_GET(a, 0, int), 10);
+    /*assert_equals_int(ARRAY_GET(a, 0, int), 10);*/
 
-    int j = 12, h = 13, k = 14;
-    ARRAY_PUSH(&a, j);
-    ARRAY_PUSH(&a, h);
-    ARRAY_PUSH(&a, k);
+    /*int j = 12, h = 13, k = 14;*/
+    /*ARRAY_PUSH(&a, j);*/
+    /*ARRAY_PUSH(&a, h);*/
+    /*ARRAY_PUSH(&a, k);*/
 
-    // iterating
-    int _i;
-    for (_i = 0; _i < a.length; _i++) {
-        printf("a[%d]: %d\n", _i, ARRAY_GET(a, _i, int));
-    }
+    /*// iterating*/
+    /*int _i;*/
+    /*for (_i = 0; _i < a.length; _i++) {*/
+        /*printf("a[%d]: %d\n", _i, ARRAY_GET(a, _i, int));*/
+    /*}*/
 
-    char b = 'c';
-    char b2 = 'c';
-    char b3 = 'c';
+    /*char b = 'c';*/
+    /*char b2 = 'c';*/
+    /*char b3 = 'c';*/
 
-    ARRAY_PUSH(&a, b);
-    ARRAY_PUSH(&a, b2);
-    ARRAY_PUSH(&a, b3);
+    /*ARRAY_PUSH(&a, b);*/
+    /*ARRAY_PUSH(&a, b2);*/
+    /*ARRAY_PUSH(&a, b3);*/
 
-    assert(ARRAY_GET(a, 4, char) == 'c');
-    assert(ARRAY_GET(a, 5, char) == 'c');
-    assert(ARRAY_GET(a, 6, char) == 'c');
+    /*assert(ARRAY_GET(a, 4, char) == 'c');*/
+    /*assert(ARRAY_GET(a, 5, char) == 'c');*/
+    /*assert(ARRAY_GET(a, 6, char) == 'c');*/
 
-    char c[] = "a long phrase with some chars\n";
+    /*char c[] = "a long phrase with some chars\n";*/
 
-    ARRAY_PUSH_PTR(&a, c);
-    printf("%s", ARRAY_GET_PTR(a, 7, char*));
-    assert(strcmp(ARRAY_GET_PTR(a, 7, char*), "a long phrase with some chars\n") == 0);
+    /*ARRAY_PUSH_PTR(&a, c);*/
+    /*printf("%s", ARRAY_GET_PTR(a, 7, char*));*/
+    /*assert(strcmp(ARRAY_GET_PTR(a, 7, char*), "a long phrase with some chars\n") == 0);*/
 
-    array_free(&a);
+    /*array_free(&a);*/
 
-    return 0;
-}
+    /*return 0;*/
+/*}*/
 
