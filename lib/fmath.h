@@ -5,5 +5,6 @@
 #define IS_ODD(n) n % 2 != 0
 
 int is_prime(long);
+long factorial(int);
 
 #endif
